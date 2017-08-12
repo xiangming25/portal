@@ -62,9 +62,17 @@ gulp.task('icon_fonts',function(){
 gulp.task('html',function(){
 	var folders = getFolders(modulesPath);
 	var tasks = folders.map(function(folder) {
-		return gulp.src(path.join(modulesPath, folder, 'views/*.html'))
-			.pipe(htmlmin({collapseWhitespace: true}))
-			.pipe(gulp.dest(htmlDestPath+'/'+folder));
+		const files = getHtmlFiles(path.join(modulesPath, folder));
+		files.map(function(file) {
+			return gulp.src([
+				path.join(modulesPath, 'common/views', 'header.html'),
+				path.join(modulesPath, folder, 'views/'+file),
+				path.join(modulesPath, 'common/views', 'footer.html'),
+			])
+			.pipe(concat(file))
+      .pipe(htmlmin({collapseWhitespace: true}))
+      .pipe(gulp.dest(htmlDestPath+'/'+folder));
+		})
 	});
 	return tasks;
 });
@@ -209,5 +217,17 @@ function getFolders(dir){
 	return fs.readdirSync(dir)
 	.filter(function(file){
 		return fs.statSync(path.join(dir,file)).isDirectory();
+	});
+}
+
+/**
+ * 获取文件
+ * @param  {[type]} dir [description]
+ * @return {[type]}     [description]
+ */
+function getHtmlFiles(dir) {
+	return fs.readdirSync(path.join(dir, 'views'))
+	.filter(function(file) {
+		return fs.statSync(path.join(dir, 'views', file)).isFile();
 	});
 }
