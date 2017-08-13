@@ -6,7 +6,7 @@
 	require.config({
 		baseUrl : '/assets/js',
 		paths : {
-			'jquery' : '/vendor/jquery',
+			'jquery' : '/vendor/jquery.min',
 			'default' : '/components/default',
 			'network' : '/components/network',
 			'errorCode' : '/components/errorCode',
